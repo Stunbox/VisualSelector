@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class DragRoulette : MonoBehaviour
 {
+    [SerializeField] private RouletteManager _rouletteManager;
     public bool dragOnSurfaces = true;
-
+   
     private Camera _myCamera;
     private Vector3 _screenPos;
     private float _angleOffset;
@@ -14,6 +15,7 @@ public class DragRoulette : MonoBehaviour
 
     private void Start()
     {
+        _rouletteManager = GameObject.Find("RouletteManager").GetComponent<RouletteManager>();
         _myCamera = Camera.main;
         _col = GetComponent<Collider2D>();
         
@@ -39,8 +41,7 @@ public class DragRoulette : MonoBehaviour
             }
             if (Input.GetMouseButtonUp(0))
             {
-                Debug.Log("MouseUp");
-                //Check actual option;
+                _rouletteManager.FocusOnOption();
             }
         }
             

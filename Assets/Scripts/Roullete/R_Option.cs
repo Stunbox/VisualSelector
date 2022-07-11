@@ -9,21 +9,32 @@ public class R_Option : MonoBehaviour
     
     [SerializeField] private int _num;
     [SerializeField] private string _text;
-    [SerializeField] private Sprite _icon;
+    [SerializeField] public Sprite icon;
 
     [SerializeField] private Image _uIicon;
     [SerializeField] private TMP_Text _uItext;
 
+    [SerializeField] public Vector4 angleRotation;
     [SerializeField] public OptionData[] optionsData;
     
+
+    private void Start()
+    {
+        CalculateAngleForSelected();
+    }
     public void SetData(OptionData optionData)
     {
 
         _num = optionData.num;
         _text = optionData.text;
-        _icon = optionData.icon;
+        icon = optionData.icon;
+        optionsData = optionData.optionsData;
 
-        _uIicon.sprite = _icon;
+        _uIicon.sprite = icon;
         _uItext.text = _text;
+    }
+    private void CalculateAngleForSelected()
+    {
+        angleRotation = new Vector4(0,0,this.GetComponent<RectTransform>().rotation.z*-1, this.GetComponent<RectTransform>().rotation.w);
     }
 }
