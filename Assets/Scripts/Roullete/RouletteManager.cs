@@ -24,6 +24,8 @@ public class RouletteManager : MonoBehaviour
     {
         _lastOption = r_Option;
         icon.sprite = _lastOption.icon;
+        Color color = new Color(_lastOption.iconColor.r, _lastOption.iconColor.g, _lastOption.iconColor.b, 1f);
+        icon.color = color;
         PreviewNexRoulette();
     }
     private void PreviewNexRoulette() // se llama para ver los elementos de esa opcion
@@ -74,17 +76,8 @@ public class OptionData
     [SerializeField] public int num;
     [SerializeField] public string text;
     [SerializeField] public Sprite icon;
+    [SerializeField] public Color iconColor;
 
     [SerializeField] public OptionData[] optionsData;
-    public OptionData(int num)
-    {
-        this.num = num;
-        optionsData = new OptionData[6];
-    }
-    public void SetData(string text,Sprite icon)
-    {
-        this.text = text;
-        this.icon = icon;
-    }
 }
 

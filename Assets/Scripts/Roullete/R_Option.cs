@@ -10,6 +10,7 @@ public class R_Option : MonoBehaviour
     [SerializeField] private int _num;
     [SerializeField] private string _text;
     [SerializeField] public Sprite icon;
+    [SerializeField] public Color iconColor;
 
     [SerializeField] private Image _uIicon;
     [SerializeField] private TMP_Text _uItext;
@@ -28,8 +29,11 @@ public class R_Option : MonoBehaviour
         _num = optionData.num;
         _text = optionData.text;
         icon = optionData.icon;
-        optionsData = optionData.optionsData;
+        iconColor = optionData.iconColor;
+        _uIicon.color = optionData.iconColor;
 
+        optionsData = optionData.optionsData;
+        
         _uIicon.sprite = icon;
         _uItext.text = _text;
     }
