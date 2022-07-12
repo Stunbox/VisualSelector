@@ -7,8 +7,8 @@ using TMPro;
 public class R_Option : MonoBehaviour
 {
     
-    [SerializeField] private int _num;
-    [SerializeField] private string _text;
+    [SerializeField] public int num;
+    [SerializeField] public string text;
     [SerializeField] public Sprite icon;
     [SerializeField] public Color iconColor;
 
@@ -26,8 +26,8 @@ public class R_Option : MonoBehaviour
     public void SetData(OptionData optionData)
     {
 
-        _num = optionData.num;
-        _text = optionData.text;
+        num = optionData.num;
+        text = optionData.text;
         icon = optionData.icon;
         iconColor = optionData.iconColor;
         _uIicon.color = optionData.iconColor;
@@ -35,7 +35,7 @@ public class R_Option : MonoBehaviour
         optionsData = optionData.optionsData;
         
         _uIicon.sprite = icon;
-        _uItext.text = _text;
+        _uItext.text = text;
     }
     private void CalculateAngleForSelected()
     {

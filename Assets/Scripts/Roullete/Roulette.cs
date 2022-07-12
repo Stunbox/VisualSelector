@@ -9,32 +9,48 @@ public class Roulette : MonoBehaviour
     public int _level;
     public R_Option[] r_Options; //defined in editor
     public Roulette nextRoulette;
+    public RectTransform rectTransform;
     [SerializeField] private bool _focused = false;
     [SerializeField] private Collider2D _collider;
-    [SerializeField] private RectTransform _rectTransform;
-    public Quaternion quaternion;
-
+    
+    [SerializeField] private GameObject _empty;
+    public float sizeAnimDuration;
     private void Start()
     {
         _collider = GetComponent<Collider2D>();
-        _rectTransform = GetComponent<RectTransform>();
+        rectTransform = GetComponent<RectTransform>();
     }
-    private void Update()
-    {
-        quaternion = _rectTransform.rotation;
-
-    }
-
     public void PreviewNextRoulette(R_Option r_Option)
     {
-        if(nextRoulette != null)
+
+        Vector3 from = new Vector3(1,1,1);
+        Vector3 to = new Vector3(0, 0, 0);
+
+        StartCoroutine(Lerp(from, to, sizeAnimDuration/1.5f, nextRoulette.rectTransform, () =>
         {
-            nextRoulette.SetRouletteOptions(r_Option.optionsData);
+            if (r_Option.optionsData.Length > 0 && nextRoulette != null)
+            {
+                nextRoulette.SetRouletteOptions(r_Option.optionsData);
+                nextRoulette._empty.SetActive(false);
+            }
+            else
+            {
+                nextRoulette.ClearRouletteOptions();
+                nextRoulette._empty.SetActive(true);
+            }
+            StartCoroutine(Lerp(to, from, sizeAnimDuration/1.5f, nextRoulette.rectTransform, () => { }));
         }
+        ));
+
+        
+        
     }
     public void FocusOnOption(R_Option option)
     {
-        _rectTransform.rotation = new Quaternion(0,0,option.angleRotation.z,option.angleRotation.w);
+        Quaternion from = rectTransform.rotation;
+        Quaternion to = new Quaternion(0, 0, option.angleRotation.z, option.angleRotation.w);
+
+        StartCoroutine(Lerp(from, to, sizeAnimDuration / 1.5f, rectTransform, () => { }));
     }
     public void SetRouletteOptions(OptionData[] optionsData)
     {
@@ -53,35 +69,71 @@ public class Roulette : MonoBehaviour
             }
         }
     }
+    public void ClearRouletteOptions()
+    {
+        for (int i = 0; i < r_Options.Length; i++)
+        {
+            r_Options[i].gameObject.SetActive(false);
+        }
+    }
     public bool IncreaseSize(float multiplier)
     {
+        bool contineIncrasing = true;
         RectTransform rectTrans = this.gameObject.GetComponent<RectTransform>();
-        if(rectTrans.localScale.x == 0)
+        Vector3 fromSize = rectTrans.localScale;
+        Vector3 toSize;
+
+        if(fromSize.x == 0)
         {
-            rectTrans.localScale = new Vector3(1, 1, 1);
-            return false;
+            toSize = new Vector3(1, 1, 1);
+            contineIncrasing = false;
         }
         else
         {
-            rectTrans.localScale = rectTrans.localScale * multiplier;
-            
+            toSize = rectTrans.localScale * multiplier;   
         }
-        CheckCanFocus(rectTrans);
-        return true;
+
+        StartCoroutine(Lerp(fromSize, toSize, sizeAnimDuration,rectTrans,()=> { CheckCanFocus(rectTrans); }));
+        return contineIncrasing;
+    }
+    IEnumerator Lerp(Vector3 from, Vector3 to, float duration, RectTransform rectTrans, EmptyFunction onFinished)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime <= duration)
+        {
+            elapsedTime += Time.deltaTime;
+            rectTrans.localScale = Vector3.Lerp(from, to, elapsedTime / duration);
+            yield return null;
+        }
+        onFinished();
+    }
+    IEnumerator Lerp(Quaternion from, Quaternion to, float duration, RectTransform rectTrans, EmptyFunction onFinished)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime <= duration)
+        {
+            elapsedTime += Time.deltaTime;
+            rectTrans.rotation = Quaternion.Lerp(from, to, elapsedTime / duration);
+            yield return null;
+        }
+        onFinished();
     }
     public bool DismisSize()
     {
         RectTransform rectTrans = this.gameObject.GetComponent<RectTransform>();
-        if (rectTrans.localScale.x > 0)
+        Vector3 fromSize = rectTrans.localScale;
+        Vector3 toSize;
+        if (fromSize.x > 0)
         {
-            
-            if (rectTrans.localScale.x > 0 && rectTrans.localScale.x < 1.5) 
+            if (fromSize.x > 0 && fromSize.x < 1.5) 
             {
-                rectTrans.localScale = new Vector3(0, 0, 0);
+                toSize = new Vector3(0, 0, 0);
+                StartCoroutine(Lerp(fromSize, toSize, sizeAnimDuration, rectTrans, () => {}));
                 return false;
             }
-            rectTrans.localScale = rectTrans.localScale * 0.625f;
-            CheckCanFocus(rectTrans);
+            toSize = rectTrans.localScale * 0.625f;
+
+            StartCoroutine(Lerp(fromSize, toSize, sizeAnimDuration, rectTrans, () => { CheckCanFocus(rectTrans); }));
         }
         return true;
     }

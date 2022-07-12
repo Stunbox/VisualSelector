@@ -23,4 +23,8 @@ public class SliderManager : MonoBehaviour
         _slider.value++;
         _sliderValue_txt.text = _slider.value.ToString();
     }
+    public float GetSliderValue()
+    {
+        return _slider.value;
+    }
 }
