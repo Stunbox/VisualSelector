@@ -10,6 +10,7 @@ public class TradeManager : MonoBehaviour
     [SerializeField] private Image _icon;
     [SerializeField] private TMP_Text _objTxt;
     [SerializeField] private TMP_Text _objCountTxt;
+    [SerializeField] private GameObject particleExplosion,particleLoop;
 
     public void ActiveTradePanel(Sprite icon, Color iconColor, string objTxt, float objCount)
     {
@@ -19,5 +20,7 @@ public class TradeManager : MonoBehaviour
         _objTxt.text = objTxt;
         _objCountTxt.text = "x"+objCount.ToString();
         _tradePanel.SetActive(true);
+        particleExplosion.SetActive(true);
+        particleLoop.SetActive(true);
     }
 }

@@ -41,9 +41,6 @@ public class Roulette : MonoBehaviour
             StartCoroutine(Lerp(to, from, sizeAnimDuration/1.5f, nextRoulette.rectTransform, () => { }));
         }
         ));
-
-        
-        
     }
     public void FocusOnOption(R_Option option)
     {
@@ -96,28 +93,7 @@ public class Roulette : MonoBehaviour
         StartCoroutine(Lerp(fromSize, toSize, sizeAnimDuration,rectTrans,()=> { CheckCanFocus(rectTrans); }));
         return contineIncrasing;
     }
-    IEnumerator Lerp(Vector3 from, Vector3 to, float duration, RectTransform rectTrans, EmptyFunction onFinished)
-    {
-        float elapsedTime = 0f;
-        while (elapsedTime <= duration)
-        {
-            elapsedTime += Time.deltaTime;
-            rectTrans.localScale = Vector3.Lerp(from, to, elapsedTime / duration);
-            yield return null;
-        }
-        onFinished();
-    }
-    IEnumerator Lerp(Quaternion from, Quaternion to, float duration, RectTransform rectTrans, EmptyFunction onFinished)
-    {
-        float elapsedTime = 0f;
-        while (elapsedTime <= duration)
-        {
-            elapsedTime += Time.deltaTime;
-            rectTrans.rotation = Quaternion.Lerp(from, to, elapsedTime / duration);
-            yield return null;
-        }
-        onFinished();
-    }
+    
     public bool DismisSize()
     {
         RectTransform rectTrans = this.gameObject.GetComponent<RectTransform>();
@@ -141,5 +117,27 @@ public class Roulette : MonoBehaviour
     {
         _focused = (rectTrans.localScale.x > 1.5f) && (rectTrans.localScale.x < 1.7f) ? true : false;
         _collider.enabled = _focused;
+    }
+    IEnumerator Lerp(Vector3 from, Vector3 to, float duration, RectTransform rectTrans, EmptyFunction onFinished)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime <= duration)
+        {
+            elapsedTime += Time.deltaTime;
+            rectTrans.localScale = Vector3.Lerp(from, to, elapsedTime / duration);
+            yield return null;
+        }
+        onFinished();
+    }
+    IEnumerator Lerp(Quaternion from, Quaternion to, float duration, RectTransform rectTrans, EmptyFunction onFinished)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime <= duration)
+        {
+            elapsedTime += Time.deltaTime;
+            rectTrans.rotation = Quaternion.Lerp(from, to, elapsedTime / duration);
+            yield return null;
+        }
+        onFinished();
     }
 }

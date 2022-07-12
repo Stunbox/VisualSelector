@@ -35,12 +35,20 @@ public class RouletteManager : MonoBehaviour
     public void SetLastOption(R_Option r_Option) //se llama al dejar la opcion seleccionada
     {
         if (_lastOption != null) { animationManager.SetUnHighlightOption(_lastOption.GetComponent<Animator>()); }
+        
         _lastOption = r_Option;
         animationManager.SetHighlightOption(_lastOption.GetComponent<Animator>());
 
-        icon.sprite = _lastOption.icon;
-        Color color = new Color(_lastOption.iconColor.r, _lastOption.iconColor.g, _lastOption.iconColor.b, 1f);
-        icon.color = color;
+        Vector3 from = icon.rectTransform.localScale;
+        Vector3 to = new Vector3(0, 0, 0);
+
+        StartCoroutine(Lerp(from, to, animationManager.sizeAnimDuration / 1.5f,icon.rectTransform, () => 
+        {
+            icon.sprite = _lastOption.icon;
+            Color color = new Color(_lastOption.iconColor.r, _lastOption.iconColor.g, _lastOption.iconColor.b, 1f);
+            icon.color = color;
+            StartCoroutine(Lerp(to, from, animationManager.sizeAnimDuration / 1.5f, icon.rectTransform, () => { }));
+        }));
 
         PreviewNexRoulette();
     }
@@ -117,7 +125,17 @@ public class RouletteManager : MonoBehaviour
             reached = false;
         }
     }
-
+    IEnumerator Lerp(Vector3 from, Vector3 to, float duration, RectTransform rectTrans, EmptyFunction onFinished)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime <= duration)
+        {
+            elapsedTime += Time.deltaTime;
+            rectTrans.localScale = Vector3.Lerp(from, to, elapsedTime / duration);
+            yield return null;
+        }
+        onFinished();
+    }
     #endregion
 }
 public delegate void EmptyFunction();
