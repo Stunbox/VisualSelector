@@ -2,4 +2,5 @@
 Logica de un selector visual de opciones desarrollado en Unity con el lenguaje C#
 
 
-<img src="https://stunbox-bucket.s3.us-east-2.amazonaws.com/VSelector.gif"/>
+Preview link:
+https://stunbox-bucket.s3.us-east-2.amazonaws.com/VSelector.gif
